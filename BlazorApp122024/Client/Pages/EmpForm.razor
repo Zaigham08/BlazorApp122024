@@ -1,0 +1,90 @@
+﻿﻿@page "/EmpForm"
+
+@using BlazorApp122024.Shared;
+@inject HttpClient Http
+
+<h3>Employee Form</h3>
+
+<EditForm Model="@employee" OnValidSubmit="@HandleOnSubmit">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+
+
+    <label>
+        Enter Employee Id :
+        <InputNumber  @bind-Value="employee.Id" />
+    </label>
+    <br>
+     <label>
+        Enter Employee Name :
+        <InputText  @bind-Value="employee.Name" />
+    </label>
+    <br>
+    <label>
+        Enter Employee Age:
+        <InputNumber @bind-Value="employee.Age" />
+    </label>
+    <br>
+     <label>
+        Enter Employee Salary :
+        <InputNumber @bind-Value="employee.Salary" />
+    </label>
+    <br>
+    <button type="submit" >Submit</button>
+
+</EditForm>
+
+
+<p>@msg</p>
+
+<table>
+
+    <thead>Id</thead>
+    <thead>Name</thead>
+    <thead>Age</thead>
+    <thead>Salary</thead>
+
+
+ @foreach(Employee emp  in employees )
+{
+    <tr>
+        <td>@emp.Id</td>
+        <td>@emp.Name</td>
+        <td>@emp.Age</td>
+        <td>@emp.Salary</td>
+    </tr>
+}
+</table>
+
+@*<GreySectionComp.Components.StudentComp student="@student" />*@
+
+@code {
+    Employee employee = new Employee();
+
+    List<Employee> employees = new List<Employee>();
+    string msg = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        employees =  await Http.GetFromJsonAsync<List<Employee>>("/pass");
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        employees = await Http.GetFromJsonAsync<List<Employee>>("/pass");
+
+    }
+
+    async void HandleOnSubmit()
+    {
+        var res = await Http.PostAsJsonAsync("/api/Employee", employee);
+        if(res.IsSuccessStatusCode)
+        {
+            msg = res.ToString();
+        }
+        StateHasChanged();
+    }
+
+}
