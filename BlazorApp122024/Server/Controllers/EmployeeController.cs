@@ -51,7 +51,6 @@ namespace BlazorApp122024.Server.Controllers
             }
         }
 
-        // PUT api/userprofiles/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee(int id, Employee employee)
         {

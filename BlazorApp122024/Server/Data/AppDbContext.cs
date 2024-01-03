@@ -10,6 +10,7 @@ namespace BlazorApp122024.Server.Data
         {
         }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Course> Students { get; set; }
 
     }
 }
